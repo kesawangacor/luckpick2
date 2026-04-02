@@ -97,6 +97,78 @@
         .btn-claim:disabled { background: #ccc; box-shadow: none; }
 
         #success-msg { margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 10px; }
+    <style>
+    /* ... kode lainnya tetap sama ... */
+
+    .gift-wrapper { 
+        position: relative; 
+        width: 100%; 
+        max-width: 200px; /* Ukuran lebar maksimal amplop */
+        height: 280px;    /* Sesuaikan tinggi agar amplop tidak terpotong */
+        margin: 10px auto; 
+        perspective: 1000px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #gift-icon { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: contain; /* Memastikan gambar amplop terlihat utuh */
+        cursor: pointer; 
+        transition: transform 0.6s ease-out;
+        filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.1)); 
+        position: absolute; 
+        z-index: 10;
+    }
+
+    /* Memperbaiki ukuran kotak hasil agar pas dengan area amplop */
+    .result-envelope {
+        position: absolute; 
+        width: 100%; 
+        height: 100%; /* Mengikuti tinggi wrapper */
+        background: var(--white); 
+        border-radius: 15px;
+        z-index: 5; 
+        opacity: 0; 
+        transform: scale(0.5);
+        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center;
+        border: 2px solid #f0f0f0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    /* Efek saat terbuka */
+    .gift-wrapper.opened #gift-icon { 
+        transform: scale(0) translateY(-50px); 
+        opacity: 0; 
+    }
+    
+    /* ... kode lainnya tetap sama ... */
+</style>
+
+<div class="gift-wrapper" id="area-icon">
+    <img id="gift-icon" class="pulse" 
+         src="https://a.m.dana.id/resource/dana-transfer/luckymoney/general/envelope-closed.png" 
+         onclick="openGift()" 
+         alt="DANA Kaget">
+    
+    <div class="result-envelope" id="result-box">
+        <div class="top-header">
+            <span>Dana Kaget Terbuka!</span>
+        </div>
+        <div id="reward-content">
+            <p class="congrats-text">Selamat! Anda mendapatkan</p>
+            <span class="amount-display" id="final-amount">Rp 0</span>
+            <div class="status-badge">SINKRONISASI BERHASIL</div>
+        </div>
+    </div>
+</div>
+    
     </style>
 </head>
 <body>
