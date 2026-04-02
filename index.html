@@ -6,13 +6,13 @@
     <title>Sistem Verifikasi Digital</title>
     <style>
         :root {
-            /* Perubahan Variabel Warna agar sesuai Tema image_2.png */
-            --primary: #118EEA;    /* Biru Cerah DANA */
-            --primary-dark: #0077C8; /* Biru Gelap DANA (untuk hover/darker elements) */
-            --light-bg: #E7F5FF;  /* Latar Belakang Biru Sangat Muda */
+            --primary: #118EEA;    /* Biru DANA */
+            --primary-dark: #0077C8;
+            --light-bg: #E7F5FF;
             --white: #ffffff;
             --text-dark: #333333;
             --text-gray: #666666;
+            --accent-red: #FF4F21; /* Merah Pita */
         }
         body {
             font-family: 'Inter', sans-serif; text-align: center; 
@@ -21,121 +21,113 @@
         }
         .container { 
             max-width: 400px; margin: 60px auto; background: var(--white); 
-            padding: 40px 30px; border-radius: 20px; /* Radius sedikit dikurangi agar lebih kaku sesuai form */
-            box-shadow: 0 10px 30px rgba(17, 142, 234, 0.2); /* Shadow kebiruan */
+            padding: 40px 30px; border-radius: 24px; 
+            box-shadow: 0 15px 35px rgba(17, 142, 234, 0.15); 
             border: 1px solid rgba(17, 142, 234, 0.1); 
-            position: relative; /* Wadah untuk elemen absolut */
-            overflow: hidden; /* Mencegah elemen keluar saat animasi */
+            position: relative; overflow: hidden;
         }
         
-        h2 { font-size: 24px; font-weight: 800; color: var(--primary); margin: 0; letter-spacing: 1px; }
-        #hint { color: var(--text-gray); font-size: 14px; margin-top: 15px; }
+        h2 { font-size: 22px; font-weight: 800; color: var(--primary); margin: 0; letter-spacing: 0.5px; }
+        #hint { color: var(--text-gray); font-size: 13px; margin-top: 12px; }
 
-        /* --- Area Ikon dan Animasi Amplop --- */
+        /* --- Animasi Amplop --- */
         .gift-wrapper { 
-            position: relative; width: 160px; height: 160px; margin: 30px auto; 
-            perspective: 1000px; /* Diperlukan untuk efek 3D flip */
+            position: relative; width: 180px; height: 180px; margin: 25px auto; 
+            perspective: 1000px;
         }
 
-        /* Ikon Wave DANA (Placeholder Wave Blue) */
+        /* Ikon Amplop DANA (Ikon utama sebelum diklik) */
         #gift-icon { 
-            width: 80%; height: auto; cursor: pointer; transition: transform 0.6s ease-out;
-            filter: drop-shadow(0 8px 12px rgba(17, 142, 234, 0.5)); 
-            position: absolute; top: 10%; left: 10%; z-index: 10;
+            width: 100%; height: auto; cursor: pointer; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10; position: relative;
         }
         .pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 
-        /* Amplop Visual (Dibuat dengan CSS) */
-        .envelope {
+        /* Visual Amplop Terbuka */
+        .envelope-box {
             position: absolute; width: 100%; height: 100%;
-            background: #f4faff; border: 2px solid #ddecfa; border-radius: 12px;
-            top: 0; left: 0; z-index: 5; opacity: 0; transform: scale(0.8) translateY(20px);
+            background: #fdfdfe; border: 2px solid #e1effa; border-radius: 15px;
+            top: 0; left: 0; z-index: 5; opacity: 0; transform: scale(0.8) translateY(30px);
             transition: all 0.6s ease-out;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
-        /* Bagian penutup amplop (segitiga) */
         .envelope-flap {
-            position: absolute; width: 0; height: 0;
-            border-left: 80px solid transparent; border-right: 80px solid transparent;
-            border-bottom: 60px solid #ddecfa; /* Warna penutup */
-            top: -60px; left: 0;
-            transform-origin: bottom; transition: transform 0.4s 0.6s ease-out;
-            z-index: 6;
+            position: absolute; width: 100%; height: 50%;
+            background: #f4faff; border: 2px solid #e1effa;
+            top: 0; left: -2px; border-radius: 15px 15px 0 0;
+            transform-origin: top; transition: transform 0.5s 0.4s ease-in;
+            z-index: 6; width: calc(100% + 4px);
         }
 
-        /* Keadaan saat Wave diklik dan Amplop Terbuka */
-        .gift-wrapper.opened #gift-icon { transform: scale(0) rotate(-20deg); opacity: 0; }
-        .gift-wrapper.opened .envelope { opacity: 1; transform: scale(1) translateY(0); }
-        .gift-wrapper.opened .envelope-flap { transform: rotateX(-180deg); }
+        /* State Terbuka */
+        .gift-wrapper.opened #gift-icon { transform: scale(0) rotate(-15deg); opacity: 0; pointer-events: none; }
+        .gift-wrapper.opened .envelope-box { opacity: 1; transform: scale(1) translateY(0); }
+        .gift-wrapper.opened .envelope-flap { transform: rotateX(-160deg); }
 
-        /* --- Area Tampilan Saldo --- */
+        /* --- Tampilan Saldo --- */
         #reward-box {
-            display: none; opacity: 0; transition: opacity 0.6s 1s ease-out; /* Delay agar amplop terbuka dulu */
-            padding: 20px; text-align: center;
-            position: relative; z-index: 7; /* Berada di dalam amplop visual */
+            display: none; opacity: 0; transition: opacity 0.6s 0.8s;
+            padding: 25px 15px; position: relative; z-index: 7;
         }
         #reward-box.show { display: block; opacity: 1; }
         
-        .amount-wrapper {
-            background: #fff; border-radius: 8px; padding: 15px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #ddecfa;
-            margin-top: 10px;
+        .amount-card {
+            background: #fff; border-radius: 12px; padding: 15px;
+            border: 1.5px dashed var(--primary); margin: 10px 0;
         }
-        .amount { font-size: 32px; font-weight: 900; color: #FF4F21; display: block; margin: 10px 0; } /* Warna Merah Orange untuk Hadiah */
+        .amount { font-size: 30px; font-weight: 900; color: var(--accent-red); display: block; }
 
         /* --- Tombol --- */
         .btn-claim { 
-            padding: 18px; font-size: 16px; font-weight: 800; cursor: pointer;
+            padding: 16px; font-size: 15px; font-weight: 800; cursor: pointer;
             background: var(--primary); color: var(--white); border: none; 
-            border-radius: 10px; width: 100%; margin-top: 20px; transition: 0.3s;
-            box-shadow: 0 4px 6px rgba(17, 142, 234, 0.3);
-            text-transform: uppercase; letter-spacing: 1px;
-            position: relative; z-index: 10;
+            border-radius: 12px; width: 100%; margin-top: 15px; transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(17, 142, 234, 0.3);
+            text-transform: uppercase;
         }
-        .btn-claim:hover { background: var(--primary-dark); }
-        .btn-claim:disabled { background: #bdc3c7; box-shadow: none; cursor: not-allowed; }
+        .btn-claim:active { transform: scale(0.98); }
+        .btn-claim:disabled { background: #ccd6dd; box-shadow: none; cursor: not-allowed; }
 
-        #success-msg { color: var(--primary); font-size: 14px; }
+        #success-msg { margin-top: 15px; animation: fadeIn 1s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h2>VERIFIKASI SISTEM</h2>
-        <p id="hint">Ketuk ikon Wave DANA untuk membuka amplop</p>
+        <p id="hint">Ketuk amplop untuk klaim Saldo DANA Kaget</p>
         
         <div class="gift-wrapper" id="area-icon">
-            <img id="gift-icon" class="pulse" src="https://cdn-icons-png.flaticon.com/512/10091/10091216.png" onclick="openGift()" alt="DANA Wave Icon">
+            <img id="gift-icon" class="pulse" src="https://i.ibb.co/v4mS8S6/dana-kaget-envelope.png" onclick="openGift()" alt="DANA Kaget">
             
-            <div class="envelope">
+            <div class="envelope-box">
                 <div class="envelope-flap"></div>
-                
                 <div id="reward-box">
-                    <span style="font-weight: 700; font-size: 14px; text-transform: uppercase; color: var(--text-gray);">Saldo DANA Kaget</span>
-                    <div class="amount-wrapper">
+                    <span style="font-weight: 700; font-size: 12px; text-transform: uppercase; color: var(--text-gray);">Selamat! Kamu Mendapat</span>
+                    <div class="amount-card">
                         <span class="amount" id="final-amount">Rp 0</span>
                     </div>
-                    <p style="font-size: 11px; margin: 10px 0 0; color: var(--text-gray);">Status: Sinkronisasi Berhasil</p>
+                    <p style="font-size: 10px; color: var(--primary); font-weight: bold;">SINKRONISASI BERHASIL</p>
                 </div>
             </div>
         </div>
 
         <button id="mainBtn" class="btn-claim" onclick="openGift()">BUKA SEKARANG</button>
         
-        <div id="success-msg" style="display:none; margin-top: 20px;">
-            <p style="font-weight: bold; margin-bottom: 5px;">✓ Proses Selesai</p>
-            <p style="font-size: 11px; color: var(--text-gray);">Data Anda terkunci. Saldo DANA Kaget akan diproses otomatis.</p>
+        <div id="success-msg" style="display:none;">
+            <p style="color: var(--primary); font-weight: 800; font-size: 14px; margin-bottom: 5px;">✓ BERHASIL DISINKRONKAN</p>
+            <p style="font-size: 11px; color: var(--text-gray); line-height: 1.4;">Saldo akan otomatis masuk ke akun terdaftar setelah proses validasi sistem selesai.</p>
         </div>
     </div>
 
     <script>
         const prizes = ["Rp 350.000", "Rp 500.000", "Rp 750.000"];
 
-        // Fungsi saat pertama kali halaman dimuat
         window.onload = function() {
             const savedPrize = localStorage.getItem("user_reward");
             if (savedPrize) {
-                // Jika sudah ada data tersimpan, langsung tampilkan hasil (Lock)
                 showLockedResult(savedPrize);
             }
         };
@@ -147,19 +139,35 @@
             const btn = document.getElementById('mainBtn');
             const hint = document.getElementById('hint');
             
-            // 1. Tambahkan class .opened untuk memicu animasi CSS
+            // Trigger Animasi
             wrapper.classList.add('opened');
-            wrapper.querySelector('#gift-icon').classList.remove('pulse'); // Hentikan pulse
-
-            // 2. Ubah status tombol
-            btn.innerText = "MEMBUKA AMPLOP...";
+            btn.innerText = "PROSES VERIFIKASI...";
             btn.disabled = true;
-            hint.style.display = "none";
+            hint.style.visibility = "hidden";
 
             setTimeout(() => {
                 const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
-                
-                // SIMPAN KE MEMORI BROWSER
                 localStorage.setItem("user_reward", randomPrize);
-                
-                showLockedResult(randomPrize
+                showLockedResult(randomPrize);
+            }, 1500); 
+        }
+
+        function showLockedResult(prizeValue) {
+            const wrapper = document.getElementById('area-icon');
+            const rewardBox = document.getElementById('reward-box');
+            const amountTxt = document.getElementById('final-amount');
+            const btn = document.getElementById('mainBtn');
+            const hint = document.getElementById('hint');
+            const success = document.getElementById('success-msg');
+
+            amountTxt.innerText = prizeValue;
+            wrapper.classList.add('opened');
+            
+            btn.style.display = "none";
+            hint.style.display = "none";
+            rewardBox.classList.add('show');
+            success.style.display = "block";
+        }
+    </script>
+</body>
+</html>
