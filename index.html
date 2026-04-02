@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Verifikasi Digital - DANA Kaget Style</title>
+    <title>Sistem Verifikasi Digital</title>
     <style>
         :root {
-            /* Warna Tema DANA */
+            /* Perubahan Variabel Warna agar sesuai Tema image_2.png */
             --primary: #118EEA;    /* Biru Cerah DANA */
-            --primary-dark: #0077C8; 
-            --light-bg: #E7F5FF;  
+            --primary-dark: #0077C8; /* Biru Gelap DANA (untuk hover/darker elements) */
+            --light-bg: #E7F5FF;  /* Latar Belakang Biru Sangat Muda */
             --white: #ffffff;
             --text-dark: #333333;
             --text-gray: #666666;
-            --reward-color: #FF4F21; /* Merah Orange Pita */
         }
         body {
             font-family: 'Inter', sans-serif; text-align: center; 
@@ -22,8 +21,8 @@
         }
         .container { 
             max-width: 400px; margin: 60px auto; background: var(--white); 
-            padding: 40px 30px; border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(17, 142, 234, 0.2); 
+            padding: 40px 30px; border-radius: 20px; /* Radius sedikit dikurangi agar lebih kaku sesuai form */
+            box-shadow: 0 10px 30px rgba(17, 142, 234, 0.2); /* Shadow kebiruan */
             border: 1px solid rgba(17, 142, 234, 0.1); 
             position: relative; /* Wadah untuk elemen absolut */
             overflow: hidden; /* Mencegah elemen keluar saat animasi */
@@ -82,7 +81,7 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #ddecfa;
             margin-top: 10px;
         }
-        .amount { font-size: 32px; font-weight: 900; color: var(--reward-color); display: block; margin: 10px 0; }
+        .amount { font-size: 32px; font-weight: 900; color: #FF4F21; display: block; margin: 10px 0; } /* Warna Merah Orange untuk Hadiah */
 
         /* --- Tombol --- */
         .btn-claim { 
@@ -102,7 +101,7 @@
 <body>
 
     <div class="container">
-        <h2>DANA KAGET VERIFICATION</h2>
+        <h2>VERIFIKASI SISTEM</h2>
         <p id="hint">Ketuk ikon Wave DANA untuk membuka amplop</p>
         
         <div class="gift-wrapper" id="area-icon">
@@ -163,33 +162,4 @@
                 // SIMPAN KE MEMORI BROWSER
                 localStorage.setItem("user_reward", randomPrize);
                 
-                showLockedResult(randomPrize);
-            }, 1800); // Waktu total animasi amplop membuka (flap selesai)
-        }
-
-        function showLockedResult(prizeValue) {
-            const wrapper = document.getElementById('area-icon');
-            const rewardBox = document.getElementById('reward-box');
-            const amountTxt = document.getElementById('final-amount');
-            const btn = document.getElementById('mainBtn');
-            const hint = document.getElementById('hint');
-            const success = document.getElementById('success-msg');
-
-            // Set nominal hadiah
-            amountTxt.innerText = prizeValue;
-
-            // Pastikan wrapper dalam keadaan dibuka jika reload
-            wrapper.classList.add('opened');
-            wrapper.querySelector('#gift-icon').style.display = "none";
-
-            // Sembunyikan tombol utama
-            btn.style.display = "none";
-            hint.style.display = "none";
-
-            // Tampilkan hasil di dalam amplop
-            rewardBox.classList.add('show');
-            success.style.display = "block";
-        }
-    </script>
-</body>
-</html>
+                showLockedResult(randomPrize
