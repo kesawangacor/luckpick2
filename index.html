@@ -24,7 +24,7 @@
         /* Ikon Animasi */
         .gift-wrapper { position: relative; width: 160px; height: 160px; margin: 30px auto; }
         #gift-icon { 
-            width: 100%; height: 100%; cursor: pointer; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            width: 100%; height: 100%; cursor: pointer; transition: 0.5s;
             filter: drop-shadow(0 10px 15px rgba(16, 185, 129, 0.3));
         }
         .pulse { animation: pulse 2s infinite; }
@@ -45,70 +45,88 @@
             background: var(--primary); color: white; border: none; border-radius: 15px; 
             width: 100%; margin-top: 20px; transition: 0.3s;
         }
-        .btn-claim:active { transform: scale(0.95); }
-
-        /* Status Text */
-        .status-msg { font-size: 14px; color: #94a3b8; margin-top: 15px; line-height: 1.5; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2 style="color: var(--primary); margin: 0; letter-spacing: 1px;">VERIFIKASI AKUN</h2>
-        <p class="status-msg" id="hint">Ketuk kotak di bawah untuk melihat status sinkronisasi akun Anda</p>
+        <h2 style="color: var(--primary); margin: 0; letter-spacing: 1px;">VERIFIKASI SISTEM</h2>
+        <p id="hint" style="font-size: 14px; color: #94a3b8; margin-top: 15px;">Ketuk ikon untuk sinkronisasi akun</p>
         
-        <div class="gift-wrapper">
-            <img id="gift-icon" class="pulse" src="https://cdn-icons-png.flaticon.com/512/10142/10142646.png" alt="Icon" onclick="openGift()">
+        <div class="gift-wrapper" id="area-icon">
+            <img id="gift-icon" class="pulse" src="https://cdn-icons-png.flaticon.com/512/10142/10142646.png" onclick="openGift()">
         </div>
 
         <div id="reward-box">
-            <span style="font-weight: 700; font-size: 14px; text-transform: uppercase; color: #64748b;">Saldo Terdeteksi</span>
+            <span style="font-weight: 700; font-size: 14px; text-transform: uppercase; color: #64748b;">Saldo Terverifikasi</span>
             <span class="amount" id="final-amount">Rp 0</span>
-            <p style="font-size: 12px; margin: 0; color: #94a3b8;">ID: 4492-XXXX-8821</p>
+            <p style="font-size: 11px; margin: 0; color: #94a3b8;">Status: Berhasil Disinkronkan</p>
         </div>
 
-        <button id="mainBtn" class="btn-claim" onclick="openGift()">CEK SEKARANG</button>
+        <button id="mainBtn" class="btn-claim" onclick="openGift()">CEK STATUS SEKARANG</button>
         
         <div id="success-msg" style="display:none; margin-top: 20px;">
-            <p style="color: var(--primary); font-weight: bold; margin-bottom: 5px;">✓ Sinkronisasi Berhasil</p>
-            <p style="font-size: 11px; color: #94a3b8;">Saldo akan otomatis masuk ke akun terdaftar dalam 1x24 jam.</p>
+            <p style="color: var(--primary); font-weight: bold; margin-bottom: 5px;">✓ Proses Selesai</p>
+            <p style="font-size: 11px; color: #94a3b8;">Data Anda telah terkunci di server. Saldo akan diproses ke akun terdaftar.</p>
         </div>
     </div>
 
     <script>
         const prizes = ["Rp 350.000", "Rp 500.000", "Rp 750.000"];
 
+        // Fungsi saat pertama kali halaman dimuat
+        window.onload = function() {
+            const savedPrize = localStorage.getItem("user_reward");
+            if (savedPrize) {
+                // Jika sudah ada data tersimpan, langsung tampilkan hasil (Lock)
+                showLockedResult(savedPrize);
+            }
+        };
+
         function openGift() {
+            // Cek lagi apakah sudah pernah dapet (untuk keamanan ganda)
+            if (localStorage.getItem("user_reward")) return;
+
             const icon = document.getElementById('gift-icon');
             const btn = document.getElementById('mainBtn');
-            const rewardBox = document.getElementById('reward-box');
-            const amountTxt = document.getElementById('final-amount');
-            const hint = document.getElementById('hint');
-
-            // 1. Efek Klik
+            
             icon.classList.remove('pulse');
-            icon.style.transform = "scale(0.8) rotate(-10deg)";
-            btn.innerText = "MEMPROSES...";
+            icon.style.transform = "scale(0.8)";
+            btn.innerText = "MENYINKRONKAN...";
             btn.disabled = true;
 
             setTimeout(() => {
-                // 2. Hilangkan Ikon
-                icon.style.opacity = "0";
-                icon.style.transform = "scale(0) rotate(20deg)";
-                
-                // 3. Tampilkan Hasil
                 const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
-                amountTxt.innerText = randomPrize;
                 
-                setTimeout(() => {
-                    icon.style.display = "none";
-                    rewardBox.classList.add('show');
-                    btn.style.display = "none";
-                    hint.style.display = "none";
-                    document.getElementById('success-msg').style.display = "block";
-                }, 400);
+                // SIMPAN KE MEMORI BROWSER
+                localStorage.setItem("user_reward", randomPrize);
+                
+                showLockedResult(randomPrize);
+            }, 1200);
+        }
 
-            }, 1000);
+        function showLockedResult(prizeValue) {
+            const iconArea = document.getElementById('area-icon');
+            const rewardBox = document.getElementById('reward-box');
+            const amountTxt = document.getElementById('final-amount');
+            const btn = document.getElementById('mainBtn');
+            const hint = document.getElementById('hint');
+            const success = document.getElementById('success-msg');
+
+            // Set nominal hadiah
+            amountTxt.innerText = prizeValue;
+
+            // Sembunyikan elemen awal
+            iconArea.style.display = "none";
+            btn.style.display = "none";
+            hint.style.display = "none";
+
+            // Tampilkan hasil yang terkunci
+            rewardBox.classList.add('show');
+            rewardBox.style.display = "block";
+            rewardBox.style.opacity = "1";
+            rewardBox.style.transform = "scale(1)";
+            success.style.display = "block";
         }
     </script>
 </body>
