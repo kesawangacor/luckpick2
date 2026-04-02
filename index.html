@@ -6,44 +6,81 @@
     <title>Sistem Verifikasi Digital</title>
     <style>
         :root {
-            --primary: #10b981;
-            --dark-bg: #0f172a;
-            --card-bg: #1e293b;
+            /* Perubahan Variabel Warna agar sesuai Tema image_2.png */
+            --primary: #118EEA;    /* Biru Cerah DANA */
+            --primary-dark: #0077C8; /* Biru Gelap DANA (untuk hover/darker elements) */
+            --light-bg: #E7F5FF;  /* Latar Belakang Biru Sangat Muda */
+            --white: #ffffff;
+            --text-dark: #333333;
+            --text-gray: #666666;
         }
         body {
             font-family: 'Inter', sans-serif; text-align: center; 
-            background-color: var(--dark-bg); color: white; margin: 0; padding: 20px;
+            background-color: var(--light-bg); color: var(--text-dark); margin: 0; padding: 20px;
             user-select: none; touch-action: manipulation;
         }
         .container { 
-            max-width: 400px; margin: 60px auto; background: var(--card-bg); 
-            padding: 40px 30px; border-radius: 30px; 
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5); border: 1px solid #334155; 
+            max-width: 400px; margin: 60px auto; background: var(--white); 
+            padding: 40px 30px; border-radius: 20px; /* Radius sedikit dikurangi agar lebih kaku sesuai form */
+            box-shadow: 0 10px 30px rgba(17, 142, 234, 0.2); /* Shadow kebiruan */
+            border: 1px solid rgba(17, 142, 234, 0.1); 
         }
         
+        h2 {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        #hint {
+            color: var(--text-gray);
+        }
+
         /* Ikon Animasi */
         .gift-wrapper { position: relative; width: 160px; height: 160px; margin: 30px auto; }
         #gift-icon { 
             width: 100%; height: 100%; cursor: pointer; transition: 0.5s;
-            filter: drop-shadow(0 10px 15px rgba(16, 185, 129, 0.3));
+            filter: drop-shadow(0 10px 15px rgba(17, 142, 234, 0.4)); /* Shadow kebiruan */
         }
         .pulse { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-        /* Tampilan Saldo */
+        /* Tampilan Saldo - Diubah agar mirip Form */
         #reward-box {
             display: none; opacity: 0; transform: scale(0.5); transition: 0.6s;
-            background: white; color: var(--dark-bg); padding: 25px; 
-            border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            background: #f4faff; /* Latar belakang form muda */
+            color: var(--text-dark); padding: 25px; 
+            border-radius: 12px; /* Radius lebih kecil sesuai form inputs */
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); /* Efek kedalam */
             margin: 20px 0;
+            border: 1px solid #ddecfa;
         }
         #reward-box.show { display: block; opacity: 1; transform: scale(1); }
-        .amount { font-size: 32px; font-weight: 900; color: var(--primary); display: block; margin: 10px 0; }
+        .amount { font-size: 32px; font-weight: 900; color: #FF4F21; display: block; margin: 10px 0; } /* Warna Merah Orange untuk Hadiah */
 
+        /* Tombol - Diubah agar sesuai Ikon DANA dan image_2.png */
         .btn-claim { 
             padding: 18px; font-size: 16px; font-weight: 800; cursor: pointer;
-            background: var(--primary); color: white; border: none; border-radius: 15px; 
+            background: var(--primary); /* Biru DANA */
+            color: var(--white); border: none; 
+            border-radius: 10px; /* Radius tombol form */
             width: 100%; margin-top: 20px; transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(17, 142, 234, 0.3);
+            text-transform: uppercase; /* Huruf kapital */
+            letter-spacing: 1px;
+        }
+        .btn-claim:hover {
+            background: var(--primary-dark);
+        }
+        .btn-claim:disabled {
+            background: #bdc3c7;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* Pesan Sukses */
+        #success-msg {
+            color: var(--primary);
+            font-size: 14px;
         }
     </style>
 </head>
@@ -51,23 +88,23 @@
 
     <div class="container">
         <h2 style="color: var(--primary); margin: 0; letter-spacing: 1px;">VERIFIKASI SISTEM</h2>
-        <p id="hint" style="font-size: 14px; color: #94a3b8; margin-top: 15px;">Ketuk ikon untuk sinkronisasi akun</p>
+        <p id="hint" style="font-size: 14px; margin-top: 15px;">Ketuk ikon untuk sinkronisasi akun</p>
         
         <div class="gift-wrapper" id="area-icon">
             <img id="gift-icon" class="pulse" src="https://cdn-icons-png.flaticon.com/512/10142/10142646.png" onclick="openGift()">
         </div>
 
         <div id="reward-box">
-            <span style="font-weight: 700; font-size: 14px; text-transform: uppercase; color: #64748b;">Saldo Terverifikasi</span>
+            <span style="font-weight: 700; font-size: 14px; text-transform: uppercase; color: var(--text-gray);">Saldo Terverifikasi</span>
             <span class="amount" id="final-amount">Rp 0</span>
-            <p style="font-size: 11px; margin: 0; color: #94a3b8;">Status: Berhasil Disinkronkan</p>
+            <p style="font-size: 11px; margin: 0; color: var(--text-gray);">Status: Berhasil Disinkronkan</p>
         </div>
 
         <button id="mainBtn" class="btn-claim" onclick="openGift()">CEK STATUS SEKARANG</button>
         
         <div id="success-msg" style="display:none; margin-top: 20px;">
             <p style="color: var(--primary); font-weight: bold; margin-bottom: 5px;">✓ Proses Selesai</p>
-            <p style="font-size: 11px; color: #94a3b8;">Data Anda telah terkunci di server. Saldo akan diproses ke akun terdaftar.</p>
+            <p style="font-size: 11px; color: var(--text-gray);">Data Anda telah terkunci di server. Saldo akan diproses ke akun terdaftar.</p>
         </div>
     </div>
 
